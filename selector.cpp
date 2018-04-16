@@ -14,6 +14,12 @@ int main(int argc, char** argv)
   {
     data[++index] = line;
   }
+  
+  if(data.size() == 1)
+  {
+    cout << data[1];
+    return 0;
+  }
 
   char* id = ctermid(NULL);
   FILE* term = fopen(id, "rw");
