@@ -27,9 +27,9 @@ int main(int argc, char** argv)
 
   for(int idx = 1; idx <= index; idx++)
   {
-    if(data[idx].length() > 30)
+    if(data[idx].length() > 80)
     {
-      cerr << idx << ") " << data[idx].substr(0, 29) << "..." << '\n';
+      cerr << idx << ") " << data[idx].substr(0, 79) << "..." << '\n';
     } else
     {
       cerr << idx << ") " << data[idx] << '\n';
