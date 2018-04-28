@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <list>
+#include <sstream>
 
 using namespace std;
 
@@ -18,7 +20,7 @@ map<int, string> parseInput()
   return data;
 }
 
-int promptUser(map<int, string>& data)
+string promptUser(map<int, string>& data)
 {
   char* id = ctermid(NULL);
   FILE* term = fopen(id, "rw");
@@ -38,7 +40,24 @@ int promptUser(map<int, string>& data)
   cerr << '\n' << "choose which line to pass through: ";
   fgets(buffer, 80, term);
 
-  return stoi(string(buffer));
+  return string(buffer);
+}
+
+void outputChoice(map<int, string> data, string choices)
+{
+  stringstream choicesStream(choices);
+
+  list<string> choicesList;
+  string subString;
+  while(getline(choicesStream, subString, ','))
+  {
+    choicesList.push_back(subString);
+  }
+
+  for(string choice : choicesList)
+  {
+    cout << data[stoi(choice)] << endl;
+  }
 }
 
 int main(int argc, char** argv)
@@ -54,9 +73,9 @@ int main(int argc, char** argv)
 
     return 0;
   default:
-    int choice = promptUser(data);
-    cout << data[choice];
-  
+    string choice = promptUser(data);
+    outputChoice(data, choice);
+
     return 0;
   }
 }
