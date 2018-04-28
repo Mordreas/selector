@@ -3,6 +3,9 @@
 #include <map>
 #include <list>
 #include <sstream>
+#include <cctype>
+#include <algorithm>
+
 
 using namespace std;
 
@@ -45,6 +48,8 @@ string promptUser(map<int, string>& data)
 
 list<string> split(string input, char delimiter)
 {
+  input.erase(remove(input.begin(), input.end(), ' '), input.end());
+  input.erase(remove(input.begin(), input.end(), '\n'), input.end());
   stringstream inputStream(input);
   list<string> output;
   string subString;
@@ -53,27 +58,49 @@ list<string> split(string input, char delimiter)
   {
     output.push_back(subString);
   }
-
+  
   return output;
+}
+
+bool is_number(const string &input)
+{
+  return !input.empty() && all_of(input.begin(), input.end(), ::isdigit);
+}
+
+void outputLine(map<int, string> data, string input)
+{
+  if(is_number(input))
+  {
+    cout << data[stoi(input)] << endl;
+  }
+}
+
+void outputRange(map<int, string> data, string input)
+{
+  list<string> range = split(input, '-');
+
+  if(is_number(range.front()) && is_number(range.back()))
+  {
+    for(int idx = stoi(range.front()); idx <= stoi(range.back()); idx++)
+    {
+      cout << data[idx] << endl;
+    }
+  }
 }
 
 void outputChoice(map<int, string> data, string choices)
 {
   list<string> choiceList = split(choices, ',');
+  
   for(string choice : choiceList)
   {
     if(choice.find('-' != string::npos))
     {
-      list<string> range = split(choice, '-');
-
-      for(int idx = stoi(range.front()); idx <= stoi(range.back()); idx++)
-      {
-	cout << data[idx] << endl;
-      }
+      outputRange(data, choice);
     } 
     else
     {
-      cout << data[stoi(choice)] << endl;
+      outputLine(data, choice);
     }
   }
 }
