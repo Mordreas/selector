@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv)
+map<int, string> parseInput() 
 {
   map<int, string> data;
   string line;
@@ -14,18 +14,17 @@ int main(int argc, char** argv)
   {
     data[++index] = line;
   }
-  
-  if(data.size() == 1)
-  {
-    cout << data[1];
-    return 0;
-  }
 
+  return data;
+}
+
+int promptUser(map<int, string>& data)
+{
   char* id = ctermid(NULL);
   FILE* term = fopen(id, "rw");
   char* buffer = (char*)malloc(800);
 
-  for(int idx = 1; idx <= index; idx++)
+  for(int idx = 1; idx <= data.size(); idx++)
   {
     if(data[idx].length() > 80)
     {
@@ -39,7 +38,26 @@ int main(int argc, char** argv)
   cerr << '\n' << "choose which line to pass through: ";
   fgets(buffer, 80, term);
 
-  cout << data[stoi(string(buffer))];
-
-  return 0;
+  return stoi(string(buffer));
 }
+
+int main(int argc, char** argv)
+{
+  map<int, string> data = parseInput();
+  
+  switch(data.size())
+  {
+  case 0:
+    return 1;
+  case 1:
+    cout << data[1];
+
+    return 0;
+  default:
+    int choice = promptUser(data);
+    cout << data[choice];
+  
+    return 0;
+  }
+}
+
