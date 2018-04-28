@@ -43,20 +43,38 @@ string promptUser(map<int, string>& data)
   return string(buffer);
 }
 
-void outputChoice(map<int, string> data, string choices)
+list<string> split(string input, char delimiter)
 {
-  stringstream choicesStream(choices);
-
-  list<string> choicesList;
+  stringstream inputStream(input);
+  list<string> output;
   string subString;
-  while(getline(choicesStream, subString, ','))
+  
+  while(getline(inputStream, subString, delimiter))
   {
-    choicesList.push_back(subString);
+    output.push_back(subString);
   }
 
-  for(string choice : choicesList)
+  return output;
+}
+
+void outputChoice(map<int, string> data, string choices)
+{
+  list<string> choiceList = split(choices, ',');
+  for(string choice : choiceList)
   {
-    cout << data[stoi(choice)] << endl;
+    if(choice.find('-' != string::npos))
+    {
+      list<string> range = split(choice, '-');
+
+      for(int idx = stoi(range.front()); idx <= stoi(range.back()); idx++)
+      {
+	cout << data[idx] << endl;
+      }
+    } 
+    else
+    {
+      cout << data[stoi(choice)] << endl;
+    }
   }
 }
 
